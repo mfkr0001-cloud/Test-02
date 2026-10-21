@@ -25,13 +25,17 @@ jobs:
           chmod +x ~/.geode/bin/geode
           echo "$HOME/.geode/bin" >> $GITHUB_PATH
           
-          # Устанавливаем SDK и принудительно регистрируем его
-          ~/.geode/bin/geode sdk install
+          # Устанавливаем официальный SDK Geode
+          geode sdk install
 
-      - name: Build Mod for Android
+      - name: Configure CMake with Geode SDK
         run: |
-          # Экспортируем путь к Geode SDK, чтобы CMake наконец-то нашел GeodeConfig.cmake
-          export Geode_DIR="$HOME/.geode/sdk"
-          
-          geode --version
-          geode package build --target android64 --target android32
+          mkdir build
+          cd build
+          # Передаем путь к SDK напрямую в CMake, чтобы он точно нашел GeodeConfig.cmake
+          cmake .. -DGeode_DIR="$HOME/.geode/sdk"
+
+      - name: Build Mod
+        run: |
+          cd build
+          cmake --build .
