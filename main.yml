@@ -1,77 +1,30 @@
 
+
 name: Build Geode Mod
 
 on:
   push:
-    branches: [main, master]
+    branches:
+      - main
+      - master
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  android32:
-    name: Android 32-bit
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+  build:
+    name: Build Mod
+    runs-on: ubuntu-22.04
 
-      - name: Build Android 32-bit
-        id: build
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Build with Geode SDK
         uses: geode-sdk/build-geode-mod@main
         with:
-          sdk: given
-          target: Android32
+          sdk: "3.9.0"
           build-config: Release
-
-      - name: Upload Android 32-bit
-        uses: actions/upload-artifact@v4
-        with:
-          name: Ha-Android32
-          path: ${{ steps.build.outputs.build-output }}/*.geode
-          if-no-files-found: error
-
-  android64:
-    name: Android 64-bit
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Build Android 64-bit
-        id: build
-        uses: geode-sdk/build-geode-mod@main
-        with:
-          sdk: given
-          target: Android64
-          build-config: Release
-
-      - name: Upload Android 64-bit
-        uses: actions/upload-artifact@v4
-        with:
-          name: Ha-Android64
-          path: ${{ steps.build.outputs.build-output }}/*.geode
-          if-no-files-found: error
-
-  windows64:
-    name: Windows 64-bit
-    runs-on: windows-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Build Windows 64-bit
-        id: build
-        uses: geode-sdk/build-geode-mod@main
-        with:
-          sdk: given
-          target: Win64
-          build-config: Release
-
-      - name: Upload Windows 64-bit
-        uses: actions/upload-artifact@v4
-        with:
-          name: Ha-Windows64
-          path: ${{ steps.build.outputs.build-output }}/*.geode
-          if-no-files-found: error
