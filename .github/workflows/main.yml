@@ -8,4 +8,17 @@ on:
 
 jobs:
   build:
-    uses: geode-sdk/actions/build@main
+    name: Build Mod
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Geode CLI
+        uses: geode-sdk/install-cli@main
+
+      - name: Build Mod
+        run: geode package build
