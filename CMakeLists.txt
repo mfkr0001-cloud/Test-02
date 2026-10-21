@@ -1,24 +1,8 @@
-name: Build Geode Mod
+cmake_minimum_required(VERSION 3.21)
+project(Ha VERSION 1.0.0)
 
-on:
-  push:
-    branches: [ "main", "master" ]
-  pull_request:
-    branches: [ "main", "master" ]
+find_package(Geode REQUIRED)
 
-jobs:
-  build:
-    name: Build Android
-    runs-on: ubuntu-22.04
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup CLI & Build
-        run: |
-          wget https://github.com/geode-sdk/cli/releases/latest/download/geode-cli-linux.zip -O geode.zip
-          unzip geode.zip -d ~/.geode/bin
-          chmod +x ~/.geode/bin/geode
-          ~/.geode/bin/geode --version
-          ~/.geode/bin/geode package build --target android64 --target android32
+add_geode_mod(ha
+    src/main.cpp
+)
