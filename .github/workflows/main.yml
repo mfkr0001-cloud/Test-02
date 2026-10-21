@@ -17,13 +17,15 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
       - name: Install Geode CLI
         run: |
-          # Скачиваем и устанавливаем последнюю версию Geode CLI для Linux
-          wget -q https://github.com/geode-sdk/cli/releases/latest/download/geode-cli-linux.tar.gz
-          tar -xzf geode-cli-linux.tar.gz
-          chmod +x geode
-          sudo mv geode /usr/local/bin/geode
+          pip install --upgrade pip
+          pip install geode-cli
 
       - name: Build Mod
         run: geode package build
