@@ -12,12 +12,18 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
           submodules: recursive
 
-      - name: Setup Geode CLI
-        uses: geode-sdk/install-cli@main
+      - name: Install Geode CLI
+        run: |
+          # Скачиваем и устанавливаем последнюю версию Geode CLI для Linux
+          wget -q https://github.com/geode-sdk/cli/releases/latest/download/geode-cli-linux.tar.gz
+          tar -xzf geode-cli-linux.tar.gz
+          chmod +x geode
+          sudo mv geode /usr/local/bin/geode
 
       - name: Build Mod
         run: geode package build
