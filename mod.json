@@ -1,0 +1,12 @@
+{
+  "geode": "3.9.0",
+  "gd": {
+    "win": "2.2074",
+    "android": "2.2081"
+  },
+  "id": "mfkr.ha",
+  "name": "Ha",
+  "version": "v0.2.0",
+  "developer": "mfkr0001",
+  "description": "Geometry Dash Mod for Android and Windows"
+}
