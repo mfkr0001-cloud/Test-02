@@ -5,127 +5,34 @@ on:
   push:
     branches:
       - main
+      - master
   workflow_dispatch:
 
 permissions:
   contents: read
 
-concurrency:
-  group: geode-build-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
-  build-win64:
-    name: Build Windows 64-bit
-    runs-on: windows-latest
-
-    steps:
-      - name: Download project files
-        uses: actions/checkout@v4
-
-      - name: Check required project files
-        shell: pwsh
-        run: |
-          $required = @(
-            "CMakeLists.txt",
-            "mod.json",
-            "src/main.cpp"
-          )
-
-          foreach ($file in $required) {
-            if (!(Test-Path $file)) {
-              Write-Error "Required file is missing: $file"
-              exit 1
-            }
-            Write-Host "Found: $file"
-          }
-
-      - name: Configure and build with Geode SDK
-        id: build
-        uses: geode-sdk/build-geode-mod@main
-        with:
-          sdk: latest
-          target: Win64
-          build-config: Release
-
-      - name: Upload Windows build
-        uses: actions/upload-artifact@v4
-        with:
-          name: Geode-Mod-Windows-64-bit
-          path: output/*.geode
-          if-no-files-found: error
-          retention-days: 7
-
-  build-android32:
-    name: Build Android 32-bit
+  build:
+    name: Build Mod
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download project files
+      - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
-      - name: Check required project files
-        shell: bash
-        run: |
-          set -eu
-
-          for file in CMakeLists.txt mod.json src/main.cpp; do
-            if [ ! -f "$file" ]; then
-              echo "::error::Required file is missing: $file"
-              exit 1
-            fi
-            echo "Found: $file"
-          done
-
-      - name: Configure and build with Geode SDK
+      - name: Build with Geode SDK
         id: build
         uses: geode-sdk/build-geode-mod@main
         with:
           sdk: latest
-          target: Android32
           build-config: Release
 
-      - name: Upload Android 32-bit build
+      - name: Upload compiled mod
         uses: actions/upload-artifact@v4
         with:
-          name: Geode-Mod-Android-32-bit
-          path: output/*.geode
-          if-no-files-found: error
-          retention-days: 7
-
-  build-android64:
-    name: Build Android 64-bit
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Download project files
-        uses: actions/checkout@v4
-
-      - name: Check required project files
-        shell: bash
-        run: |
-          set -eu
-
-          for file in CMakeLists.txt mod.json src/main.cpp; do
-            if [ ! -f "$file" ]; then
-              echo "::error::Required file is missing: $file"
-              exit 1
-            fi
-            echo "Found: $file"
-          done
-
-      - name: Configure and build with Geode SDK
-        id: build
-        uses: geode-sdk/build-geode-mod@main
-        with:
-          sdk: latest
-          target: Android64
-          build-config: Release
-
-      - name: Upload Android 64-bit build
-        uses: actions/upload-artifact@v4
-        with:
-          name: Geode-Mod-Android-64-bit
-          path: output/*.geode
+          name: Geode-Mod
+          path: ${{ steps.build.outputs.build-output }}
           if-no-files-found: error
           retention-days: 7
