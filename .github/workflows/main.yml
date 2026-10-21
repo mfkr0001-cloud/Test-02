@@ -17,8 +17,13 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install Geode CLI
-        uses: geode-sdk/install-cli@main
+      - name: Configure CMake
+        run: |
+          mkdir build
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release
 
-      - name: Build Mod
-        run: geode package build
+      - name: Build
+        run: |
+          cd build
+          cmake --build .
