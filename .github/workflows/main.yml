@@ -18,9 +18,7 @@ jobs:
           submodules: recursive
 
       - name: Install Geode CLI
-        run: |
-          curl -sL https://geode-sdk.org/install.sh | sh
-          echo "$HOME/.geode/bin" >> $GITHUB_PATH
+        run: wget -qO- https://geode-sdk.org/install.sh | sh
 
       - name: Build Mod
-        run: geode package build
+        run: ~/.geode/bin/geode package build
